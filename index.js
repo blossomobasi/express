@@ -25,6 +25,9 @@ app.get("/", (req, res) => {
 //   //   res.send(req.query);
 // });
 
+app.use(express.json());
+
+// HTTP GET request
 app.get("/api/courses", (req, res) => {
   res.send(courses);
 });
@@ -36,6 +39,18 @@ app.get("/api/courses/:id", (req, res) => {
   res.send(course);
 });
 
+// HTTP POST request
+app.post("/api/courses", (req, res) => {
+  const course = {
+    id: courses.length + 1,
+    name: req.body.name,
+  };
+  courses.push(course);
+  res.send(course);
+});
+
 // PORT
-const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`Listening on port ${port}...`));
+// const port = process.env.PORT || 3000;
+// app.listen(port, () => console.log(`Listening on port ${port}...`));
+
+app.listen(3000, () => console.log('Listening on port 3000...'))
