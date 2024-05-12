@@ -28,7 +28,7 @@ app.get("/", (req, res) => {
 
 app.use(express.json());
 
-// HTTP GET request
+// --------- HTTP GET request ---------
 app.get("/api/courses", (req, res) => {
   res.send(courses);
 });
@@ -40,7 +40,7 @@ app.get("/api/courses/:id", (req, res) => {
   res.send(course);
 });
 
-// HTTP POST request
+// --------- HTTP POST request ---------
 app.post("/api/courses", (req, res) => {
   // Input Validation
 
@@ -50,7 +50,7 @@ app.post("/api/courses", (req, res) => {
   //     return;
   //   }
   const { error } = validateCourse(req.body);
-  if (error) res.status(400).send(error.message);
+  if (error) return res.status(400).send(error.message);
 
   const course = {
     id: courses.length + 1,
@@ -61,20 +61,18 @@ app.post("/api/courses", (req, res) => {
   res.send(course);
 });
 
-// HTTP PUT request
+// --------- HTTP PUT request ---------
 app.put("/api/courses/:id", (req, res) => {
   // Look up the course
   // If not existing, return 404
   const course = courses.find((c) => c.id === parseInt(req.params.id));
   if (!course)
-    res.status(404).send("The course with the given ID was not found");
+    return res.status(404).send("The course with the given ID was not found");
 
   // Validate
   // If invalid, return 400 - Bad Request
   const { error } = validateCourse(req.body); // result.error
-  if (error) {
-    res.status(400).send(error.message);
-  }
+  if (error) return res.status(400).send(error.message);
 
   // Update course
   course.name = req.body.name;
@@ -91,6 +89,19 @@ const validateCourse = (course) => {
   const result = schema.validate(course);
   return result;
 };
+
+app.delete("/api/courses/:id", (req, res) => {
+  // Look up the course
+  const course = courses.find((c) => c.id === parseInt(req.params.id));
+  if (!course)
+    return res.status(404).send("The course with the given ID was not found");
+
+  // Delete
+  const index = courses.indexOf(course);
+  courses.splice(index, 1);
+
+  res.send(course);
+});
 
 // PORT
 // const port = process.env.PORT || 3000;
