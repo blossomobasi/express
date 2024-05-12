@@ -49,23 +49,48 @@ app.post("/api/courses", (req, res) => {
   //     res.status(400).send("Name is required and should be minimum 3 characters");
   //     return;
   //   }
-
-  const schema = Joi.object({
-    name: Joi.string().min(3).required(),
-  });
-
-  const result = schema.validate(req.body);
-  if (result.error) {
-    res.send(result.error.message);
-  }
+  const { error } = validateCourse(req.body);
+  if (error) res.status(400).send(error.message);
 
   const course = {
     id: courses.length + 1,
     name: req.body.name,
   };
+
   courses.push(course);
   res.send(course);
 });
+
+// HTTP PUT request
+app.put("/api/courses/:id", (req, res) => {
+  // Look up the course
+  // If not existing, return 404
+  const course = courses.find((c) => c.id === parseInt(req.params.id));
+  if (!course)
+    res.status(404).send("The course with the given ID was not found");
+
+  // Validate
+  // If invalid, return 400 - Bad Request
+  const { error } = validateCourse(req.body); // result.error
+  if (error) {
+    res.status(400).send(error.message);
+  }
+
+  // Update course
+  course.name = req.body.name;
+
+  // Return the updated course
+  res.send(course);
+});
+
+const validateCourse = (course) => {
+  const schema = Joi.object({
+    name: Joi.string().min(3).required(),
+  });
+
+  const result = schema.validate(course);
+  return result;
+};
 
 // PORT
 // const port = process.env.PORT || 3000;
