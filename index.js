@@ -1,7 +1,21 @@
 const express = require("express");
+const helmet = require("helmet");
+const morgan = require("morgan");
 const Joi = require("joi");
 
+const logger = require("./logger");
+const authentication = require("./authentication");
+
 const app = express();
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static("public"));
+app.use(helmet());
+app.use(morgan("tiny"));
+
+app.use(logger);
+app.use(authentication);
 
 const courses = [
   { id: 1, name: "course1" },
@@ -25,8 +39,6 @@ app.get("/", (req, res) => {
 //   res.send(req.params);
 //   //   res.send(req.query);
 // });
-
-app.use(express.json());
 
 // --------- HTTP GET request ---------
 app.get("/api/courses", (req, res) => {
