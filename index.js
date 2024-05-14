@@ -10,6 +10,9 @@ const authentication = require("./authentication");
 
 const app = express();
 
+app.set("view engine", "pug");
+app.set("views", "./views");
+
 // Configuration
 // console.log("Application Name: " + config.get("name"));
 // console.log("Mail Server: " + config.get("mail.host"));
@@ -42,7 +45,10 @@ const courses = [
 ];
 
 app.get("/", (req, res) => {
-  res.send('Message for url "/" ');
+  res.render("index", {
+    title: "My Express App",
+    message: "Hello",
+  });
 });
 
 // app.get("/api/courses", (req, res) => {
