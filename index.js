@@ -1,3 +1,4 @@
+const config = require("config");
 const express = require("express");
 const helmet = require("helmet");
 const morgan = require("morgan");
@@ -7,6 +8,11 @@ const logger = require("./logger");
 const authentication = require("./authentication");
 
 const app = express();
+
+// Configuration
+console.log("Application Name: " + config.get("name"));
+console.log("Mail Server: " + config.get("mail.host"));
+console.log("Mail Password: " + config.get("mail.password"));
 
 /*
 // Detect if machine is on production or development mode
