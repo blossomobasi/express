@@ -9,6 +9,7 @@ const authentication = require("./authentication");
 const app = express();
 
 /*
+// Detect if machine is on production or development mode
 console.log(`NODE_ENV: ${process.env.NODDE_ENV}`);
 console.log(`app: ${app.get("env")}`);
 */
